@@ -1,0 +1,25 @@
+@import 'tailwindcss';
+
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+:root {
+  --font-primary: var(--font-proxima-nova);
+  --font-proxima-nova: 'proxima-nova';
+}
+
+body {
+  font-family: var(--font-primary), serif;
+}
+
+@font-face {
+  font-family: 'proxima-nova';
+  font-weight: normal;
+  src: url('/fonts/ProximaNova/Proxima Nova Regular.ttf');
+}
+
+@font-face {
+  font-family: 'proxima-nova';
+  font-weight: bold;
+  src: url('/fonts/ProximaNova/Proxima Nova Semibold.ttf');
+}
