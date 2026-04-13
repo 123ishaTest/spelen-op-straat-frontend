@@ -41,7 +41,7 @@
     isRightDown = false;
   };
 
-  let color = $state('ffffff');
+  let color = $state('aaaaaa');
 
   const sendDirection = (direction: Direction) => {
     sendRequest({ type: 'change-direction', direction: direction });
