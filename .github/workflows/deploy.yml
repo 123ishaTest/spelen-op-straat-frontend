@@ -23,7 +23,7 @@ jobs:
       - name: build
         env:
           BASE_PATH: '/${{ github.event.repository.name }}'
-          PUBLIC_WEBSOCKET_SERVER: ws://dwelling-couch-waffle.ngrok-free.dev
+          PUBLIC_WEBSOCKET_SERVER: wss://dwelling-couch-waffle.ngrok-free.dev
 
         run: |
           npm run build
