@@ -1,10 +1,11 @@
 <script lang="ts">
   import TurnLeft from '$lib/components/icons/TurnLeft.svelte';
   import TurnRight from '$lib/components/icons/TurnRight.svelte';
-  import { onMount } from 'svelte';
   import { Direction } from '$lib/model/Direction.ts';
   import ConnectionStatus from '$lib/components/ConnectionStatus.svelte';
   import { PUBLIC_WEBSOCKET_SERVER } from '$env/static/public';
+  import type { ServerMessage } from '$lib/model/ServerMessage.ts';
+  import type { ClientRequest } from '$lib/model/ClientRequest.ts';
 
   let isLeftDown = $state(false);
   let isRightDown = $state(false);
@@ -40,14 +41,14 @@
     isRightDown = false;
   };
 
+  let color = $state('ffffff');
+
   const sendDirection = (direction: Direction) => {
-    // TODO(@Isha): Websocket send
-    webSocket.send(
-      JSON.stringify({
-        type: 'input',
-        direction: direction,
-      }),
-    );
+    sendRequest({ type: 'change-direction', direction: direction });
+  };
+
+  const sendRequest = (request: ClientRequest) => {
+    webSocket.send(JSON.stringify(request));
   };
 
   const webSocket = new WebSocket(PUBLIC_WEBSOCKET_SERVER);
@@ -63,18 +64,57 @@
     console.warn(e);
   });
 
-  onMount(() => {
-    return setInterval(() => {
-      if (!isConnected) {
-        return;
-      }
-      sendDirection(direction);
-    }, 100);
+  const acceptMessage = (data: ServerMessage) => {
+    switch (data.type) {
+      case 'character-created':
+        color = data.color;
+    }
+  };
+
+  webSocket.addEventListener('message', (e) => {
+    const data = JSON.parse(e.data);
+    acceptMessage(data);
   });
+
+  $effect(() => {
+    if (!isConnected) {
+      return;
+    }
+    sendDirection(direction);
+  });
+
+  const onKeyDown = (e: KeyboardEvent) => {
+    switch (e.key) {
+      case 'a':
+      case 'ArrowLeft':
+        downLeft();
+        break;
+      case 'd':
+      case 'ArrowRight':
+        downRight();
+    }
+  };
+  const onKeyUp = (e: KeyboardEvent) => {
+    switch (e.key) {
+      case 'a':
+      case 'ArrowLeft':
+        upLeft();
+        break;
+      case 'd':
+      case 'ArrowRight':
+        upRight();
+    }
+  };
 </script>
 
+<svelte:window
+  on:touchstart||preventDefault|passive={() => false}
+  on:keydown|preventDefault={onKeyDown}
+  on:keyup|preventDefault={onKeyUp}
+/>
+
 <div class="grass flex h-screen touch-none flex-col select-none">
-  <div class="flex flex-row items-center justify-center border-b-4 border-white">
+  <div class="flex flex-row items-center justify-center border-b-4 border-white" style="background: #{color};">
     <span class="p-4 text-xl font-bold text-white">Spelen op Straat</span>
     <ConnectionStatus {isConnected} />
   </div>
