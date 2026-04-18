@@ -11,4 +11,7 @@
   }
 </script>
 
-<GameView {username}></GameView>
+<!-- Fix to avoid websocket connecting -->
+{#if username}
+  <GameView {username}></GameView>
+{/if}
