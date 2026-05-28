@@ -6,4 +6,5 @@ interface BaseMessage {
 export interface CharacterCreatedMessage extends BaseMessage {
   type: 'character-created';
   color: string;
+  username: string;
 }

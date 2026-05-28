@@ -4,8 +4,9 @@
 @plugin '@tailwindcss/typography';
 
 :root {
-  --font-primary: var(--font-proxima-nova);
+  --font-primary: var(--font-bevellier);
   --font-proxima-nova: 'proxima-nova';
+  --font-bevellier: 'bevellier';
 }
 
 body {
@@ -22,4 +23,16 @@ body {
   font-family: 'proxima-nova';
   font-weight: bold;
   src: url('/fonts/ProximaNova/Proxima Nova Semibold.ttf');
+}
+
+@font-face {
+  font-family: 'bevellier';
+  font-weight: normal;
+  src: url('/fonts/Bevellier/Bevellier Medium.otf');
+}
+
+@font-face {
+  font-family: 'bevellier';
+  font-weight: bold;
+  src: url('/fonts/Bevellier/Bevellier Bold.otf');
 }

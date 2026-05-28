@@ -1,5 +1,5 @@
 <script lang="ts">
-  import InputUsername from '$lib/components/InputUsername.svelte';
+  import Tutorial from '$lib/components/Tutorial.svelte';
 </script>
 
-<InputUsername />
+<Tutorial />

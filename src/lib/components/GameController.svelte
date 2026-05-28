@@ -4,10 +4,11 @@
   import TurnRight from '$lib/components/icons/TurnRight.svelte';
 
   interface Props {
+    color: string;
     onDirectionChanged: (direction: Direction) => void;
   }
 
-  let { onDirectionChanged }: Props = $props();
+  let { onDirectionChanged, color }: Props = $props();
 
   let isLeftDown = $state(false);
   let isRightDown = $state(false);
@@ -72,7 +73,7 @@
 </script>
 
 <svelte:window
-  on:touchstart||preventDefault|passive={() => false}
+  on:touchstart|preventDefault|nonpassive={() => false}
   on:keydown|preventDefault={onKeyDown}
   on:keyup|preventDefault={onKeyUp}
 />
@@ -84,7 +85,7 @@
     onpointerdown={downLeft}
     onpointerup={upLeft}
   >
-    <TurnLeft />
+    <TurnLeft {color} />
   </div>
 
   <div class="border-2 border-white"></div>
@@ -95,6 +96,6 @@
     onpointerdown={downRight}
     onpointerup={upRight}
   >
-    <TurnRight />
+    <TurnRight {color} />
   </div>
 </div>

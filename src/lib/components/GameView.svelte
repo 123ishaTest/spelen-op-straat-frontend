@@ -2,29 +2,29 @@
   import { Direction } from '$lib/model/Direction.ts';
   import ConnectionStatus from '$lib/components/ConnectionStatus.svelte';
   import { PUBLIC_WEBSOCKET_SERVER } from '$env/static/public';
-  import type { ServerMessage } from '$lib/model/ServerMessage.ts';
-  import type { ClientRequest } from '$lib/model/ClientRequest.ts';
+  import type { ServerMessage } from '$lib/model/ServerMessage.js';
+  import type { ClientRequest } from '$lib/model/ClientRequest.js';
   import GameController from '$lib/components/GameController.svelte';
   import GrassField from '$lib/components/GrassField.svelte';
+  import Paragraph from '$lib/components/Paragraph.svelte';
+  import Refresh from '$lib/components/icons/Refresh.svelte';
+  import { onMount } from 'svelte';
 
-  interface Props {
-    username: string;
-  }
-
-  let { username = 'Anonieme Piet' }: Props = $props();
-
+  let username = $state('Could not connect');
   let color = $state('aaaaaa');
 
   const sendDirection = (direction: Direction) => {
     sendRequest({ type: 'change-direction', direction: direction });
   };
 
-  const sendUsername = (username: string) => {
-    sendRequest({ type: 'set-name', name: username });
+  const sendHeartbeat = () => {
+    sendRequest({ type: 'heartbeat' });
   };
 
   const sendRequest = (request: ClientRequest) => {
-    webSocket.send(JSON.stringify(request));
+    if (webSocket.readyState === webSocket.OPEN) {
+      webSocket.send(JSON.stringify(request));
+    }
   };
 
   const webSocket = new WebSocket(PUBLIC_WEBSOCKET_SERVER);
@@ -32,7 +32,6 @@
 
   webSocket.addEventListener('open', () => {
     isConnected = true;
-    sendUsername(username);
   });
   webSocket.addEventListener('close', () => {
     isConnected = false;
@@ -45,6 +44,7 @@
     switch (data.type) {
       case 'character-created':
         color = data.color;
+        username = data.username;
     }
   };
 
@@ -60,14 +60,42 @@
 
     sendDirection(direction);
   };
+
+  const refresh = () => {
+    window.location.reload();
+  };
+
+  onMount(() => {
+    const interval = setInterval(() => {
+      sendHeartbeat();
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  });
 </script>
 
 <GrassField>
   <div class="flex h-screen touch-none flex-col select-none">
-    <div class="flex flex-row items-center justify-center border-b-4 border-white" style="background: #{color};">
-      <span class="p-4 text-xl font-bold text-white">Spelen op Straat ({username})</span>
+    <div
+      class="flex flex-row items-center justify-center space-x-4 border-b-4 border-white p-4"
+      style="background: #{color};"
+    >
+      <Paragraph>{username}</Paragraph>
       <ConnectionStatus {isConnected} />
     </div>
-    <GameController {onDirectionChanged} />
+    {#if isConnected}
+      <GameController {onDirectionChanged} {color} />
+    {:else}
+      <div class="flex h-full flex-col items-center justify-center">
+        <button onclick={() => refresh()}>
+          <div class="h-64 w-64">
+            <Refresh />
+            <Paragraph>Refresh</Paragraph>
+          </div>
+        </button>
+      </div>
+    {/if}
   </div>
 </GrassField>
