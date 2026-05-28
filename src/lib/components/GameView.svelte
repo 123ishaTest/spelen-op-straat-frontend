@@ -89,7 +89,7 @@
       <GameController {onDirectionChanged} {color} />
     {:else}
       <div class="flex h-full flex-col items-center justify-center">
-        <button onclick={() => refresh()}>
+        <button onclick={() => refresh()} class="cursor-pointer">
           <div class="h-64 w-64">
             <Refresh />
             <Paragraph>Refresh</Paragraph>

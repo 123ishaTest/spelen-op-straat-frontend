@@ -84,6 +84,7 @@
     class="flex flex-1 cursor-pointer flex-col items-center justify-center {isLeftDown ? 'bg-gray-600/20' : ''}"
     onpointerdown={downLeft}
     onpointerup={upLeft}
+    onpointercancel={upLeft}
   >
     <TurnLeft {color} />
   </div>
@@ -95,6 +96,7 @@
     class="flex flex-1 cursor-pointer flex-col items-center justify-center {isRightDown ? 'bg-gray-600/20' : ''}"
     onpointerdown={downRight}
     onpointerup={upRight}
+    onpointercancel={upRight}
   >
     <TurnRight {color} />
   </div>
