@@ -35,6 +35,7 @@
   });
   webSocket.addEventListener('close', () => {
     isConnected = false;
+    username = "Disconnected"
   });
   webSocket.addEventListener('error', (e) => {
     console.warn(e);
