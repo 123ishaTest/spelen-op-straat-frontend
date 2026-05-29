@@ -31,10 +31,8 @@
 
     <Paragraph>Score in other goals to gain points!</Paragraph>
 
-    <Paragraph>Have fun!</Paragraph>
-
     <button
-      class="mb-16 w-full cursor-pointer border-4 border-white bg-green-600 p-4 font-bold text-white shadow-2xl drop-shadow-2xl"
+      class="mb-24 w-full cursor-pointer border-4 border-white bg-green-600 p-4 font-bold text-white shadow-2xl drop-shadow-2xl"
       onclick={() => play()}
     >
       <Paragraph>Join!</Paragraph>
